@@ -49,7 +49,6 @@ body {
   font-weight: 600;
   letter-spacing: 0.2em;
   line-height: 1.3;
-  text-transform: uppercase;
 }
 
 button,
@@ -242,7 +241,12 @@ select {
   font-weight: 500;
   line-height: 1;
   letter-spacing: 0.18em;
-  text-transform: uppercase;
+}
+
+.hud__mark {
+  width: 17px;
+  height: 17px;
+  object-fit: contain;
 }
 
 .hud__dot {
@@ -416,7 +420,6 @@ select {
   font-size: 9px;
   letter-spacing: 0.16em;
   line-height: 1.45;
-  text-transform: uppercase;
 }
 
 .zero__status {

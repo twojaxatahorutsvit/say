@@ -6,9 +6,9 @@
     <meta name="theme-color" content="#020403" />
     <meta
       name="description"
-      content="Імерсивний hero-екран із керованим скролом опусканням приладу нічного бачення."
+      content="Lyman Systems — оборонні оптико-електронні системи для складних умов спостереження."
     />
-    <title>КСБУ — Night Vision Interface</title>
+    <title>Lyman Systems — Defence electro-optics</title>
     <link rel="stylesheet" href="./styles.css" />
   </head>
   <body>
@@ -45,16 +45,17 @@
           <header class="hud" aria-label="Системний інтерфейс">
             <div class="hud__item hud__item--brand">
               <span class="hud__dot" aria-hidden="true"></span>
-              <span>КСБУ</span>
-              <span class="hud__muted">FIELD SYSTEM</span>
+              <img class="hud__mark" src="./assets/limen%20l.svg" alt="" aria-hidden="true" />
+              <span>Lyman Systems</span>
+              <span class="hud__muted">Defence electro-optics</span>
             </div>
             <div class="hud__item hud__item--state" id="system-state">
-              OPTICS // STANDBY
+              Оптика в режимі очікування
             </div>
           </header>
 
           <div class="scroll-cue" id="scroll-cue" aria-hidden="true">
-            <span class="scroll-cue__label">SCROLL TO ENGAGE</span>
+            <span class="scroll-cue__label">Прокрутіть, щоб активувати</span>
             <span class="scroll-cue__line"><i></i></span>
           </div>
 
@@ -66,7 +67,7 @@
 
           <div class="loader" id="loader" role="status" aria-live="polite">
             <span class="loader__pulse"></span>
-            <span>LOADING OPTICS</span>
+            <span>Підготовка системи</span>
           </div>
         </div>
       </section>
@@ -75,11 +76,11 @@
         <div class="zero__shell section-shell">
           <header class="zero__header">
             <div>
-              <p class="eyebrow">04 / Zero</p>
-              <h1 id="zero-title">Калібрування<br />сигналу.</h1>
+              <p class="eyebrow">Системи спостереження</p>
+              <h1 id="zero-title">Контроль того,<br />що не видно.</h1>
             </div>
             <p class="zero__status" id="zero-status" aria-live="polite">
-              OPTICS // SCAN
+              Режим сканування
             </p>
           </header>
 
@@ -87,20 +88,20 @@
             class="zero__stage"
             id="zero-stage"
             tabindex="0"
-            aria-label="Поле калібрування. Наведіть приціл на світлу мішень і натисніть."
+            aria-label="Демонстраційне поле оптики. Наведіть курсор на сигнальні точки та натисніть."
           >
             <div class="zero__grid" aria-hidden="true"></div>
             <div class="zero__haze" aria-hidden="true"></div>
             <div class="zero__noise" aria-hidden="true"></div>
             <div class="zero__flash" id="zero-flash" aria-hidden="true"></div>
 
-            <button class="zero__target" type="button" data-target style="--target-x: 21%; --target-y: 27%;" aria-label="Мішень один">
+            <button class="zero__target" type="button" data-target style="--target-x: 21%; --target-y: 27%;" aria-label="Сигнальна точка один">
               <span></span><i></i>
             </button>
-            <button class="zero__target" type="button" data-target style="--target-x: 72%; --target-y: 39%;" aria-label="Мішень два">
+            <button class="zero__target" type="button" data-target style="--target-x: 72%; --target-y: 39%;" aria-label="Сигнальна точка два">
               <span></span><i></i>
             </button>
-            <button class="zero__target" type="button" data-target style="--target-x: 43%; --target-y: 73%;" aria-label="Мішень три">
+            <button class="zero__target" type="button" data-target style="--target-x: 43%; --target-y: 73%;" aria-label="Сигнальна точка три">
               <span></span><i></i>
             </button>
 
@@ -108,17 +109,17 @@
               <span></span><i></i>
             </div>
             <div class="zero__readout zero__readout--left" aria-hidden="true">
-              <span>RANGE</span><b id="zero-range">087</b>
+              <span>Дистанція</span><b id="zero-range">087</b>
             </div>
             <div class="zero__readout zero__readout--right" aria-hidden="true">
-              <span>LOCK</span><b id="zero-lock">0 / 3</b>
+              <span>Фіксація</span><b id="zero-lock">0 / 3</b>
             </div>
-            <p class="zero__hint" id="zero-hint">MOVE / AIM / SIGNAL</p>
+            <p class="zero__hint" id="zero-hint">Рухайтеся полем спостереження</p>
           </div>
 
           <footer class="zero__footer">
-            <p>Переміщай курсор або торкнись поля. Влуч у три мішені.</p>
-            <p>FIELD SYSTEM // CALIBRATION MODULE</p>
+            <p>Переміщайте курсор або торкніться поля, щоб побачити роботу системи.</p>
+            <p>Демонстраційний модуль Lyman Systems</p>
           </footer>
         </div>
       </section>

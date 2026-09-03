@@ -79,11 +79,11 @@ const setVisualState = (progress) => {
   );
 
   if (progress < 0.28) {
-    systemState.textContent = "OPTICS // STANDBY";
+    systemState.textContent = "Оптика в режимі очікування";
   } else if (progress < 0.72) {
-    systemState.textContent = "MOUNT // ENGAGING";
+    systemState.textContent = "Система наведення активується";
   } else {
-    systemState.textContent = "PHOSPHOR // ACTIVE";
+    systemState.textContent = "Нічне бачення активне";
   }
 };
 
@@ -122,7 +122,7 @@ const prepareVideo = () => {
   video.pause();
   videoReady = duration > 0;
   loader.classList.add("is-hidden");
-  loader.textContent = "OPTICS READY";
+  loader.textContent = "Система готова";
   requestSync();
 };
 
@@ -133,7 +133,7 @@ video.addEventListener("canplay", () => loader.classList.add("is-hidden"), {
 
 video.addEventListener("error", () => {
   loader.classList.remove("is-hidden");
-  loader.textContent = "VIDEO UNAVAILABLE";
+  loader.textContent = "Відео недоступне";
 });
 
 if (video.readyState >= 1) {
@@ -197,11 +197,11 @@ if (zeroStage) {
     triggerPulse(point.x, point.y, true);
 
     if (lockedTargets === zeroTargets.length) {
-      zeroStatus.textContent = "CALIBRATION // COMPLETE";
-      zeroHint.textContent = "SIGNAL CONFIRMED";
+      zeroStatus.textContent = "Калібрування завершено";
+      zeroHint.textContent = "Система підтвердила сигнал";
     } else {
-      zeroStatus.textContent = "TARGET // LOCKED";
-      zeroHint.textContent = "TRACK NEXT SIGNAL";
+      zeroStatus.textContent = "Сигнал зафіксовано";
+      zeroHint.textContent = "Знайдіть наступну сигнальну точку";
     }
   };
 
@@ -226,8 +226,8 @@ if (zeroStage) {
     if (hitTarget) {
       lockTarget(hitTarget, point);
     } else {
-      zeroStatus.textContent = "OPTICS // REACQUIRE";
-      zeroHint.textContent = "FIND A SIGNAL";
+      zeroStatus.textContent = "Оптика шукає сигнал";
+      zeroHint.textContent = "Знайдіть сигнальну точку";
       triggerPulse(point.x, point.y, false);
     }
   });
