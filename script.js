@@ -20,7 +20,7 @@ let ticking = false;
 let videoReady = false;
 
 const setVisualState = (progress) => {
-  const maskFade = smoothstep(0.08, 0.5, progress);
+  const maskFade = smoothstep(0.58, 0.86, progress);
   const hudFade = smoothstep(0.32, 0.72, progress);
   const activation = smoothstep(0.72, 0.98, progress);
   const sceneTransition = smoothstep(0.79, 0.94, progress);

@@ -134,16 +134,22 @@ select {
     radial-gradient(
       ellipse 42% 38% at 50% 46%,
       transparent 0%,
-      transparent 48%,
-      rgba(2, 4, 3, 0.34) 70%,
+      transparent 44%,
+      rgba(2, 4, 3, 0.48) 69%,
       var(--black) 100%
+    ),
+    linear-gradient(
+      180deg,
+      rgba(2, 4, 3, 0.76) 0%,
+      rgba(2, 4, 3, 0.42) 23%,
+      transparent 54%
     ),
     linear-gradient(
       0deg,
       var(--black) 0%,
-      rgba(2, 4, 3, 0.96) 10%,
-      rgba(2, 4, 3, 0.78) 22%,
-      transparent 49%
+      rgba(2, 4, 3, 0.98) 12%,
+      rgba(2, 4, 3, 0.82) 28%,
+      transparent 56%
     );
   transition: opacity 70ms linear;
 }
