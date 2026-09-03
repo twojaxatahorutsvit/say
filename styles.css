@@ -8,6 +8,12 @@
   --scanline-opacity: 0;
   --phosphor-opacity: 0;
   --video-scale: 1.005;
+  --video-opacity: 1;
+  --scene-opacity: 0;
+  --scene-scale: 1.075;
+  --scene-blur: 14px;
+  --scene-reveal: 0%;
+  --signal-flash-opacity: 0;
   --black: #020403;
   --green: #6fa967;
   --green-muted: #89ad83;
@@ -57,10 +63,12 @@ select {
 }
 
 .hero__video,
+.hero__scene,
 .hero__exposure,
 .hero__strap-mask,
 .hero__vignette,
 .hero__phosphor,
+.hero__signal-flash,
 .hero__noise,
 .hero__scanlines {
   position: absolute;
@@ -75,12 +83,29 @@ select {
   object-fit: cover;
   object-position: 50% 50%;
   transform: scale(var(--video-scale));
+  opacity: var(--video-opacity);
   filter: brightness(0.91) contrast(1.06) saturate(0.9);
   background: var(--black);
 }
 
-.hero__exposure {
+.hero__scene {
   z-index: 1;
+  display: block;
+  object-fit: cover;
+  object-position: 50% 50%;
+  opacity: var(--scene-opacity);
+  transform: scale(var(--scene-scale));
+  clip-path: circle(var(--scene-reveal) at 50% 52%);
+  filter:
+    brightness(0.92)
+    contrast(1.08)
+    saturate(0.88)
+    blur(var(--scene-blur));
+  will-change: opacity, transform, clip-path, filter;
+}
+
+.hero__exposure {
+  z-index: 2;
   pointer-events: none;
   background:
     linear-gradient(180deg, rgba(0, 0, 0, 0.3) 0%, transparent 26%),
@@ -88,7 +113,7 @@ select {
 }
 
 .hero__strap-mask {
-  z-index: 2;
+  z-index: 3;
   pointer-events: none;
   opacity: var(--mask-opacity);
   background:
@@ -110,7 +135,7 @@ select {
 }
 
 .hero__vignette {
-  z-index: 3;
+  z-index: 4;
   pointer-events: none;
   opacity: var(--vignette-opacity);
   background: radial-gradient(
@@ -122,7 +147,7 @@ select {
 }
 
 .hero__phosphor {
-  z-index: 4;
+  z-index: 5;
   pointer-events: none;
   opacity: var(--phosphor-opacity);
   mix-blend-mode: screen;
@@ -134,8 +159,29 @@ select {
   );
 }
 
+.hero__signal-flash {
+  z-index: 6;
+  pointer-events: none;
+  opacity: var(--signal-flash-opacity);
+  mix-blend-mode: screen;
+  background:
+    radial-gradient(
+      ellipse 44% 58% at 32% 52%,
+      rgba(176, 255, 154, 0.58) 0%,
+      rgba(84, 175, 72, 0.22) 42%,
+      transparent 76%
+    ),
+    radial-gradient(
+      ellipse 44% 58% at 68% 52%,
+      rgba(176, 255, 154, 0.58) 0%,
+      rgba(84, 175, 72, 0.22) 42%,
+      transparent 76%
+    );
+  filter: blur(18px);
+}
+
 .hero__noise {
-  z-index: 5;
+  z-index: 7;
   pointer-events: none;
   opacity: var(--noise-opacity);
   mix-blend-mode: screen;
@@ -145,7 +191,7 @@ select {
 }
 
 .hero__scanlines {
-  z-index: 6;
+  z-index: 8;
   pointer-events: none;
   opacity: var(--scanline-opacity);
   background: repeating-linear-gradient(

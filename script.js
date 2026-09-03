@@ -23,6 +23,12 @@ const setVisualState = (progress) => {
   const maskFade = smoothstep(0.08, 0.5, progress);
   const hudFade = smoothstep(0.32, 0.72, progress);
   const activation = smoothstep(0.72, 0.98, progress);
+  const sceneTransition = smoothstep(0.79, 0.94, progress);
+  const sceneSettled = smoothstep(0.93, 1, progress);
+  const flashIn = smoothstep(0.78, 0.855, progress);
+  const flashOut = 1 - smoothstep(0.87, 0.955, progress);
+  const signalFlash = flashIn * flashOut;
+  const transitionNoise = signalFlash * 0.3;
 
   root.style.setProperty("--progress", progress.toFixed(4));
   root.style.setProperty("--mask-opacity", (1 - maskFade).toFixed(4));
@@ -33,19 +39,43 @@ const setVisualState = (progress) => {
   root.style.setProperty("--hud-opacity", (1 - hudFade).toFixed(4));
   root.style.setProperty(
     "--noise-opacity",
-    (0.025 + activation * 0.17).toFixed(4),
+    (0.025 + activation * 0.12 + transitionNoise - sceneSettled * 0.025).toFixed(4),
   );
   root.style.setProperty(
     "--scanline-opacity",
-    (activation * 0.042).toFixed(4),
+    (activation * 0.038 + signalFlash * 0.055).toFixed(4),
   );
   root.style.setProperty(
     "--phosphor-opacity",
-    (activation * 0.75).toFixed(4),
+    Math.min(activation * 0.52 + signalFlash * 0.7, 1).toFixed(4),
+  );
+  root.style.setProperty(
+    "--signal-flash-opacity",
+    (signalFlash * 0.9).toFixed(4),
   );
   root.style.setProperty(
     "--video-scale",
     (1.005 + progress * 0.012).toFixed(4),
+  );
+  root.style.setProperty(
+    "--video-opacity",
+    (1 - sceneTransition * 0.72).toFixed(4),
+  );
+  root.style.setProperty(
+    "--scene-opacity",
+    sceneTransition.toFixed(4),
+  );
+  root.style.setProperty(
+    "--scene-scale",
+    (1.075 - sceneTransition * 0.075).toFixed(4),
+  );
+  root.style.setProperty(
+    "--scene-blur",
+    `${(14 - sceneTransition * 14).toFixed(2)}px`,
+  );
+  root.style.setProperty(
+    "--scene-reveal",
+    `${(8 + sceneTransition * 142).toFixed(2)}%`,
   );
 
   if (progress < 0.28) {
@@ -73,7 +103,8 @@ const syncVideo = () => {
   if (!videoReady || !duration) return;
 
   const endPadding = Math.min(0.035, duration * 0.008);
-  targetTime = currentProgress * Math.max(duration - endPadding, 0);
+  const videoProgress = clamp(currentProgress / 0.8);
+  targetTime = videoProgress * Math.max(duration - endPadding, 0);
 
   if (Math.abs(video.currentTime - targetTime) > 0.016) {
     video.currentTime = targetTime;
