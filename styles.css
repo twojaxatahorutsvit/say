@@ -259,8 +259,6 @@ select {
 
 .hud__muted {
   color: rgba(219, 228, 216, 0.36);
-  font-weight: 400;
-  letter-spacing: 0.09em;
 }
 
 .scroll-cue {
@@ -381,6 +379,296 @@ select {
   text-align: center;
 }
 
+.zero {
+  position: relative;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 50% 34%, rgba(23, 76, 102, 0.18), transparent 34%),
+    #020405;
+}
+
+.zero__shell {
+  min-height: 100svh;
+  padding-block: clamp(72px, 8vw, 116px) clamp(38px, 5vw, 68px);
+}
+
+.zero__header,
+.zero__footer {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.zero__header {
+  margin-bottom: clamp(30px, 4.2vw, 58px);
+}
+
+.zero__header h1 {
+  margin: 13px 0 0;
+  color: #d2e4f1;
+  font-size: clamp(42px, 6vw, 86px);
+  font-weight: 400;
+  letter-spacing: -0.065em;
+  line-height: 0.88;
+}
+
+.zero__status,
+.zero__footer p,
+.zero__readout,
+.zero__hint {
+  font-size: 9px;
+  letter-spacing: 0.16em;
+  line-height: 1.45;
+}
+
+.zero__status {
+  margin: 0 0 6px;
+  color: rgba(175, 220, 245, 0.72);
+}
+
+.zero__stage {
+  position: relative;
+  min-height: min(68svh, 780px);
+  overflow: hidden;
+  border: 1px solid rgba(180, 219, 244, 0.22);
+  outline: none;
+  background:
+    radial-gradient(circle at 50% 52%, rgba(90, 168, 211, 0.11), transparent 18%),
+    radial-gradient(circle at 50% 50%, #0a151d 0%, #04090d 54%, #020304 100%);
+  box-shadow: inset 0 0 130px rgba(0, 0, 0, 0.72), 0 32px 90px rgba(0, 0, 0, 0.42);
+  cursor: none;
+  touch-action: none;
+}
+
+.zero__stage:focus-visible {
+  border-color: rgba(195, 232, 255, 0.78);
+}
+
+.zero__grid,
+.zero__haze,
+.zero__noise,
+.zero__flash {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.zero__grid {
+  opacity: 0.38;
+  background-image:
+    linear-gradient(rgba(151, 206, 235, 0.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(151, 206, 235, 0.08) 1px, transparent 1px),
+    linear-gradient(rgba(151, 206, 235, 0.12) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(151, 206, 235, 0.12) 1px, transparent 1px);
+  background-size: 26px 26px, 26px 26px, 130px 130px, 130px 130px;
+  mask-image: radial-gradient(circle at 50% 50%, #000 0%, transparent 77%);
+}
+
+.zero__haze {
+  opacity: 0.65;
+  background:
+    linear-gradient(90deg, rgba(68, 161, 218, 0.05), transparent 24% 75%, rgba(68, 161, 218, 0.05)),
+    radial-gradient(ellipse 32% 70% at 18% 30%, rgba(111, 189, 222, 0.1), transparent 72%),
+    radial-gradient(ellipse 34% 62% at 82% 66%, rgba(111, 189, 222, 0.08), transparent 76%);
+}
+
+.zero__noise {
+  opacity: 0.12;
+  mix-blend-mode: screen;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.82' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.68'/%3E%3C/svg%3E");
+  background-size: 180px 180px;
+  animation: grain 180ms steps(2, end) infinite;
+}
+
+.zero__flash {
+  opacity: 0;
+  mix-blend-mode: screen;
+  background: radial-gradient(circle at var(--flash-x, 50%) var(--flash-y, 50%), rgba(208, 246, 255, 0.72), rgba(99, 203, 255, 0.18) 12%, transparent 34%);
+}
+
+.zero__flash.is-active {
+  animation: zero-flash 380ms ease-out both;
+}
+
+.zero__target {
+  position: absolute;
+  z-index: 3;
+  left: var(--target-x);
+  top: var(--target-y);
+  width: clamp(54px, 6vw, 86px);
+  aspect-ratio: 1;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: #c0edff;
+  cursor: none;
+  transform: translate(-50%, -50%);
+  transition: opacity 0.4s ease, transform 0.5s cubic-bezier(0.16, 0.9, 0.24, 1), filter 0.3s ease;
+}
+
+.zero__target::before,
+.zero__target::after,
+.zero__target span,
+.zero__target i {
+  position: absolute;
+  border-radius: 50%;
+  content: "";
+}
+
+.zero__target::before {
+  inset: 0;
+  border: 1px solid currentColor;
+  box-shadow: 0 0 22px rgba(132, 219, 255, 0.32), inset 0 0 18px rgba(132, 219, 255, 0.18);
+}
+
+.zero__target::after {
+  inset: 22%;
+  border: 1px solid rgba(192, 237, 255, 0.78);
+}
+
+.zero__target span {
+  inset: 43%;
+  background: currentColor;
+  box-shadow: 0 0 14px currentColor;
+}
+
+.zero__target i {
+  inset: -16%;
+  border: 1px solid rgba(166, 220, 247, 0.16);
+  animation: target-pulse 2.2s ease-in-out infinite;
+}
+
+.zero__target:hover,
+.zero__target:focus-visible {
+  filter: brightness(1.4);
+}
+
+.zero__target:focus-visible {
+  outline: 1px solid rgba(209, 241, 255, 0.82);
+  outline-offset: 7px;
+}
+
+.zero__target.is-locked {
+  opacity: 0;
+  pointer-events: none;
+  transform: translate(-50%, -50%) scale(1.9);
+}
+
+.zero__reticle {
+  position: absolute;
+  z-index: 5;
+  left: var(--aim-x, 50%);
+  top: var(--aim-y, 50%);
+  width: clamp(88px, 9vw, 124px);
+  aspect-ratio: 1;
+  opacity: 0.82;
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+  transition: opacity 0.2s ease;
+}
+
+.zero__reticle::before,
+.zero__reticle::after,
+.zero__reticle span,
+.zero__reticle i {
+  position: absolute;
+  content: "";
+}
+
+.zero__reticle::before {
+  inset: 18%;
+  border: 1px solid rgba(206, 244, 255, 0.78);
+  border-radius: 50%;
+  box-shadow: 0 0 18px rgba(155, 225, 255, 0.18);
+}
+
+.zero__reticle::after {
+  left: 50%;
+  top: 50%;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: #d7f4ff;
+  box-shadow: 0 0 10px #d7f4ff;
+  transform: translate(-50%, -50%);
+}
+
+.zero__reticle span,
+.zero__reticle i {
+  left: 50%;
+  top: 50%;
+  background: rgba(210, 243, 255, 0.82);
+  transform: translate(-50%, -50%);
+}
+
+.zero__reticle span {
+  width: 1px;
+  height: 100%;
+}
+
+.zero__reticle i {
+  width: 100%;
+  height: 1px;
+}
+
+.zero__stage.is-hit .zero__reticle {
+  animation: reticle-hit 260ms ease-out both;
+}
+
+.zero__readout {
+  position: absolute;
+  z-index: 4;
+  bottom: 21px;
+  display: grid;
+  gap: 3px;
+  color: rgba(178, 222, 246, 0.44);
+}
+
+.zero__readout b {
+  color: rgba(213, 240, 255, 0.86);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.07em;
+}
+
+.zero__readout--left {
+  left: 23px;
+}
+
+.zero__readout--right {
+  right: 23px;
+  text-align: right;
+}
+
+.zero__hint {
+  position: absolute;
+  z-index: 4;
+  left: 50%;
+  bottom: 23px;
+  margin: 0;
+  color: rgba(196, 230, 247, 0.46);
+  transform: translateX(-50%);
+  white-space: nowrap;
+}
+
+.zero__footer {
+  padding-top: 18px;
+}
+
+.zero__footer p {
+  margin: 0;
+  color: rgba(185, 209, 226, 0.42);
+}
+
+.zero__footer p:first-child {
+  color: rgba(196, 221, 237, 0.7);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: none;
+}
+
 @keyframes grain {
   0% { background-position: 0 0; }
   25% { background-position: 23px -31px; }
@@ -397,6 +685,23 @@ select {
 @keyframes pulse {
   from { opacity: 0.3; box-shadow: 0 0 0 rgba(137, 173, 131, 0); }
   to { opacity: 1; box-shadow: 0 0 12px rgba(137, 173, 131, 0.72); }
+}
+
+@keyframes target-pulse {
+  0%, 100% { transform: scale(0.82); opacity: 0.28; }
+  50% { transform: scale(1.12); opacity: 0.85; }
+}
+
+@keyframes zero-flash {
+  0% { opacity: 0; }
+  16% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+@keyframes reticle-hit {
+  0% { transform: translate(-50%, -50%) scale(1); }
+  36% { transform: translate(-50%, -50%) scale(0.84); }
+  100% { transform: translate(-50%, -50%) scale(1); }
 }
 
 @media (max-width: 720px) {
@@ -420,6 +725,37 @@ select {
     right: 12px;
   }
 
+  .section-shell {
+    width: min(100% - 32px, 1320px);
+  }
+
+  .zero__header,
+  .zero__footer {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .zero__status {
+    margin: 0;
+  }
+
+  .zero__stage {
+    min-height: min(65svh, 650px);
+  }
+
+  .zero__readout--left {
+    left: 15px;
+  }
+
+  .zero__readout--right {
+    right: 15px;
+  }
+
+  .zero__hint {
+    bottom: 17px;
+    font-size: 8px;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -434,8 +770,15 @@ select {
 
   .hero__noise,
   .loader__pulse,
-  .scroll-cue__line i {
+  .scroll-cue__line i,
+  .zero__noise,
+  .zero__target i {
     animation: none;
+  }
+
+  .zero__target,
+  .zero__reticle {
+    transition: none;
   }
 
   .scroll-cue,
