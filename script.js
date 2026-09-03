@@ -39,7 +39,7 @@ const setVisualState = (progress) => {
   root.style.setProperty("--hud-opacity", (1 - hudFade).toFixed(4));
   root.style.setProperty(
     "--noise-opacity",
-    (0.042 + activation * 0.11 + transitionNoise - sceneSettled * 0.042).toFixed(4),
+    (0.075 + activation * 0.1 + transitionNoise - sceneSettled * 0.075).toFixed(4),
   );
   root.style.setProperty(
     "--scanline-opacity",
