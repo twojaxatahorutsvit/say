@@ -1,0 +1,5 @@
+.DS_Store
+node_modules/
+.vercel/
+*.log
+Night_vision_goggles_lowering_202609031317.mp4
