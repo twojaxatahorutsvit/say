@@ -147,21 +147,102 @@ reduceMotion.addEventListener("change", requestSync);
 setVisualState(0);
 requestSync();
 
-const revealItems = document.querySelectorAll("[data-reveal]");
+const zeroStage = document.querySelector("#zero-stage");
 
-if (reduceMotion.matches || !("IntersectionObserver" in window)) {
-  revealItems.forEach((item) => item.classList.add("is-visible"));
-} else {
-  const revealObserver = new IntersectionObserver(
-    (entries, observer) => {
-      entries.forEach((entry) => {
-        if (!entry.isIntersecting) return;
-        entry.target.classList.add("is-visible");
-        observer.unobserve(entry.target);
-      });
-    },
-    { threshold: 0.14, rootMargin: "0px 0px -6%" },
-  );
+if (zeroStage) {
+  const zeroTargets = [...zeroStage.querySelectorAll("[data-target]")];
+  const zeroStatus = document.querySelector("#zero-status");
+  const zeroRange = document.querySelector("#zero-range");
+  const zeroLock = document.querySelector("#zero-lock");
+  const zeroHint = document.querySelector("#zero-hint");
+  const zeroFlash = document.querySelector("#zero-flash");
+  let lockedTargets = 0;
 
-  revealItems.forEach((item) => revealObserver.observe(item));
+  const getAimPoint = (event) => {
+    const rect = zeroStage.getBoundingClientRect();
+    const x = clamp((event.clientX - rect.left) / rect.width);
+    const y = clamp((event.clientY - rect.top) / rect.height);
+    return { x, y };
+  };
+
+  const moveReticle = (event) => {
+    const { x, y } = getAimPoint(event);
+    zeroStage.style.setProperty("--aim-x", `${(x * 100).toFixed(2)}%`);
+    zeroStage.style.setProperty("--aim-y", `${(y * 100).toFixed(2)}%`);
+    zeroRange.textContent = String(Math.round(42 + y * 108)).padStart(3, "0");
+  };
+
+  const triggerPulse = (x, y, isHit) => {
+    zeroFlash.style.setProperty("--flash-x", `${(x * 100).toFixed(2)}%`);
+    zeroFlash.style.setProperty("--flash-y", `${(y * 100).toFixed(2)}%`);
+    zeroFlash.classList.remove("is-active");
+    void zeroFlash.offsetWidth;
+    zeroFlash.classList.add("is-active");
+
+    if (isHit) {
+      zeroStage.classList.remove("is-hit");
+      void zeroStage.offsetWidth;
+      zeroStage.classList.add("is-hit");
+      window.setTimeout(() => zeroStage.classList.remove("is-hit"), 280);
+    }
+  };
+
+  const lockTarget = (target, point) => {
+    if (target.classList.contains("is-locked")) return;
+
+    target.classList.add("is-locked");
+    target.disabled = true;
+    lockedTargets += 1;
+    zeroLock.textContent = `${lockedTargets} / ${zeroTargets.length}`;
+    triggerPulse(point.x, point.y, true);
+
+    if (lockedTargets === zeroTargets.length) {
+      zeroStatus.textContent = "CALIBRATION // COMPLETE";
+      zeroHint.textContent = "SIGNAL CONFIRMED";
+    } else {
+      zeroStatus.textContent = "TARGET // LOCKED";
+      zeroHint.textContent = "TRACK NEXT SIGNAL";
+    }
+  };
+
+  zeroStage.addEventListener("pointermove", moveReticle);
+
+  zeroStage.addEventListener("pointerdown", (event) => {
+    if (event.button && event.button !== 0) return;
+
+    zeroStage.focus({ preventScroll: true });
+    moveReticle(event);
+    const point = getAimPoint(event);
+    const hitTarget = zeroTargets.find((target) => {
+      if (target.classList.contains("is-locked")) return false;
+      const rect = target.getBoundingClientRect();
+      const distance = Math.hypot(
+        event.clientX - (rect.left + rect.width / 2),
+        event.clientY - (rect.top + rect.height / 2),
+      );
+      return distance <= rect.width * 0.72;
+    });
+
+    if (hitTarget) {
+      lockTarget(hitTarget, point);
+    } else {
+      zeroStatus.textContent = "OPTICS // REACQUIRE";
+      zeroHint.textContent = "FIND A SIGNAL";
+      triggerPulse(point.x, point.y, false);
+    }
+  });
+
+  zeroTargets.forEach((target) => {
+    target.addEventListener("click", (event) => {
+      if (event.detail !== 0 || target.classList.contains("is-locked")) return;
+      const rect = target.getBoundingClientRect();
+      const point = {
+        x: (rect.left + rect.width / 2 - zeroStage.getBoundingClientRect().left) / zeroStage.getBoundingClientRect().width,
+        y: (rect.top + rect.height / 2 - zeroStage.getBoundingClientRect().top) / zeroStage.getBoundingClientRect().height,
+      };
+      zeroStage.style.setProperty("--aim-x", `${(point.x * 100).toFixed(2)}%`);
+      zeroStage.style.setProperty("--aim-y", `${(point.y * 100).toFixed(2)}%`);
+      lockTarget(target, point);
+    });
+  });
 }

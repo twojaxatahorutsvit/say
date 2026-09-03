@@ -71,109 +71,56 @@
         </div>
       </section>
 
-      <section class="field-intro section-shell" aria-labelledby="field-title">
-        <div class="section-marker" data-reveal>
-          <span>01</span>
-          <span>FIELD SYSTEM</span>
-        </div>
-        <div class="field-intro__copy" data-reveal>
-          <p class="eyebrow">A visual field study</p>
-          <h1 id="field-title">Після того,<br />як згасло світло.</h1>
-          <p class="field-intro__lead">
-            FIELD SYSTEM 01 — серія візуальних сцен про рух, орієнтацію й
-            напругу в темряві. Не каталог спорядження. Один цілісний світ.
-          </p>
-        </div>
-        <div class="field-intro__specs" data-reveal aria-label="Параметри серії">
-          <div><span>STATUS</span><b>ACTIVE</b></div>
-          <div><span>MODE</span><b>LOW LIGHT</b></div>
-          <div><span>EDITION</span><b>01 / 04</b></div>
-        </div>
-      </section>
-
-      <section class="observe section-shell" aria-labelledby="observe-title">
-        <div class="observe__visual" data-reveal>
-          <img
-            src="./assets/nvg-forest-scene.png"
-            alt="Група в лісі, показана крізь прилад нічного бачення"
-            loading="lazy"
-          />
-          <span class="observe__glow" aria-hidden="true"></span>
-          <span class="observe__grain" aria-hidden="true"></span>
-          <p class="observe__stamp">OPTICS / ACTIVE</p>
-        </div>
-        <div class="observe__copy" data-reveal>
-          <p class="eyebrow">02 / Observe</p>
-          <h2 id="observe-title">Бачити —<br />це тримати дистанцію.</h2>
-          <p>
-            Перша сцена починається там, де закінчується hero. Зелений сигнал,
-            шум матриці та ліс, у якому деталі проявляються повільно.
-          </p>
-          <div class="observe__rule" aria-hidden="true"></div>
-          <p class="observe__note">NOISE / SIGNAL / ORIENTATION</p>
-        </div>
-      </section>
-
-      <section class="system section-shell" aria-labelledby="system-title">
-        <div class="system__heading" data-reveal>
-          <p class="eyebrow">The system</p>
-          <h2 id="system-title">Чотири стани.<br />Один ритм.</h2>
-        </div>
-        <div class="system__list" aria-label="Сцени серії">
-          <article class="system-card" data-reveal>
-            <span>01</span>
-            <h3>ENGAGE</h3>
-            <p>Прилад опускається. Простір стає інтерфейсом.</p>
-          </article>
-          <article class="system-card" data-reveal>
-            <span>02</span>
-            <h3>OBSERVE</h3>
-            <p>Шум не заважає — він підтверджує, що сигнал живий.</p>
-          </article>
-          <article class="system-card" data-reveal>
-            <span>03</span>
-            <h3>IMPACT</h3>
-            <p>Рух крізь межу, де холодне світло розсипається на фрагменти.</p>
-          </article>
-          <article class="system-card" data-reveal>
-            <span>04</span>
-            <h3>HOLD</h3>
-            <p>Тиша після руху. Точка, з якої все видно ясніше.</p>
-          </article>
-        </div>
-      </section>
-
-      <section class="impact" id="impact" aria-labelledby="impact-title">
-        <div class="impact__backdrop" aria-hidden="true"></div>
-        <div class="impact__content section-shell">
-          <div class="impact__meta" data-reveal>
-            <p class="eyebrow">03 / Impact</p>
-            <p>Entry protocol<br />Cold light / hard edges</p>
-          </div>
-          <figure class="impact__frame" data-reveal>
-            <img
-              src="./assets/rope%20blue.png"
-              alt="Чотири фігури спускаються на тросах крізь розбите скло"
-              loading="lazy"
-            />
-            <span class="impact__sheen" aria-hidden="true"></span>
-            <figcaption>FRAME 03 — FOUR LINES / ONE DESCENT</figcaption>
-          </figure>
-          <div class="impact__copy" data-reveal>
-            <h2 id="impact-title">Межа<br />не зупиняє.</h2>
-            <p>
-              Скло тут — не декорація, а момент переходу. Різкий контраст,
-              темний метал, лід у відблисках і жодного зайвого кольору.
+      <section class="zero" id="zero" aria-labelledby="zero-title">
+        <div class="zero__shell section-shell">
+          <header class="zero__header">
+            <div>
+              <p class="eyebrow">04 / Zero</p>
+              <h1 id="zero-title">Калібрування<br />сигналу.</h1>
+            </div>
+            <p class="zero__status" id="zero-status" aria-live="polite">
+              OPTICS // SCAN
             </p>
-          </div>
-        </div>
-      </section>
+          </header>
 
-      <section class="closing section-shell" aria-labelledby="closing-title">
-        <p class="eyebrow" data-reveal>FIELD SYSTEM 01</p>
-        <h2 id="closing-title" data-reveal>Тримай фокус.<br />Навіть у шумі.</h2>
-        <div class="closing__line" data-reveal aria-hidden="true"><i></i></div>
-        <p class="closing__meta" data-reveal>КСБУ / VISUAL PROTOTYPE / 2026</p>
+          <div
+            class="zero__stage"
+            id="zero-stage"
+            tabindex="0"
+            aria-label="Поле калібрування. Наведіть приціл на світлу мішень і натисніть."
+          >
+            <div class="zero__grid" aria-hidden="true"></div>
+            <div class="zero__haze" aria-hidden="true"></div>
+            <div class="zero__noise" aria-hidden="true"></div>
+            <div class="zero__flash" id="zero-flash" aria-hidden="true"></div>
+
+            <button class="zero__target" type="button" data-target style="--target-x: 21%; --target-y: 27%;" aria-label="Мішень один">
+              <span></span><i></i>
+            </button>
+            <button class="zero__target" type="button" data-target style="--target-x: 72%; --target-y: 39%;" aria-label="Мішень два">
+              <span></span><i></i>
+            </button>
+            <button class="zero__target" type="button" data-target style="--target-x: 43%; --target-y: 73%;" aria-label="Мішень три">
+              <span></span><i></i>
+            </button>
+
+            <div class="zero__reticle" id="zero-reticle" aria-hidden="true">
+              <span></span><i></i>
+            </div>
+            <div class="zero__readout zero__readout--left" aria-hidden="true">
+              <span>RANGE</span><b id="zero-range">087</b>
+            </div>
+            <div class="zero__readout zero__readout--right" aria-hidden="true">
+              <span>LOCK</span><b id="zero-lock">0 / 3</b>
+            </div>
+            <p class="zero__hint" id="zero-hint">MOVE / AIM / SIGNAL</p>
+          </div>
+
+          <footer class="zero__footer">
+            <p>Переміщай курсор або торкнись поля. Влуч у три мішені.</p>
+            <p>FIELD SYSTEM // CALIBRATION MODULE</p>
+          </footer>
+        </div>
       </section>
     </main>
 
