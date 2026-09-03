@@ -79,11 +79,11 @@ const setVisualState = (progress) => {
   );
 
   if (progress < 0.28) {
-    systemState.textContent = "Оптика в режимі очікування";
+    systemState.textContent = "Optics on standby";
   } else if (progress < 0.72) {
-    systemState.textContent = "Система наведення активується";
+    systemState.textContent = "Optical system engaging";
   } else {
-    systemState.textContent = "Нічне бачення активне";
+    systemState.textContent = "Night vision active";
   }
 };
 
@@ -122,7 +122,7 @@ const prepareVideo = () => {
   video.pause();
   videoReady = duration > 0;
   loader.classList.add("is-hidden");
-  loader.textContent = "Система готова";
+  loader.textContent = "System ready";
   requestSync();
 };
 
@@ -133,7 +133,7 @@ video.addEventListener("canplay", () => loader.classList.add("is-hidden"), {
 
 video.addEventListener("error", () => {
   loader.classList.remove("is-hidden");
-  loader.textContent = "Відео недоступне";
+  loader.textContent = "Video unavailable";
 });
 
 if (video.readyState >= 1) {
@@ -146,103 +146,3 @@ reduceMotion.addEventListener("change", requestSync);
 
 setVisualState(0);
 requestSync();
-
-const zeroStage = document.querySelector("#zero-stage");
-
-if (zeroStage) {
-  const zeroTargets = [...zeroStage.querySelectorAll("[data-target]")];
-  const zeroStatus = document.querySelector("#zero-status");
-  const zeroRange = document.querySelector("#zero-range");
-  const zeroLock = document.querySelector("#zero-lock");
-  const zeroHint = document.querySelector("#zero-hint");
-  const zeroFlash = document.querySelector("#zero-flash");
-  let lockedTargets = 0;
-
-  const getAimPoint = (event) => {
-    const rect = zeroStage.getBoundingClientRect();
-    const x = clamp((event.clientX - rect.left) / rect.width);
-    const y = clamp((event.clientY - rect.top) / rect.height);
-    return { x, y };
-  };
-
-  const moveReticle = (event) => {
-    const { x, y } = getAimPoint(event);
-    zeroStage.style.setProperty("--aim-x", `${(x * 100).toFixed(2)}%`);
-    zeroStage.style.setProperty("--aim-y", `${(y * 100).toFixed(2)}%`);
-    zeroRange.textContent = String(Math.round(42 + y * 108)).padStart(3, "0");
-  };
-
-  const triggerPulse = (x, y, isHit) => {
-    zeroFlash.style.setProperty("--flash-x", `${(x * 100).toFixed(2)}%`);
-    zeroFlash.style.setProperty("--flash-y", `${(y * 100).toFixed(2)}%`);
-    zeroFlash.classList.remove("is-active");
-    void zeroFlash.offsetWidth;
-    zeroFlash.classList.add("is-active");
-
-    if (isHit) {
-      zeroStage.classList.remove("is-hit");
-      void zeroStage.offsetWidth;
-      zeroStage.classList.add("is-hit");
-      window.setTimeout(() => zeroStage.classList.remove("is-hit"), 280);
-    }
-  };
-
-  const lockTarget = (target, point) => {
-    if (target.classList.contains("is-locked")) return;
-
-    target.classList.add("is-locked");
-    target.disabled = true;
-    lockedTargets += 1;
-    zeroLock.textContent = `${lockedTargets} / ${zeroTargets.length}`;
-    triggerPulse(point.x, point.y, true);
-
-    if (lockedTargets === zeroTargets.length) {
-      zeroStatus.textContent = "Калібрування завершено";
-      zeroHint.textContent = "Система підтвердила сигнал";
-    } else {
-      zeroStatus.textContent = "Сигнал зафіксовано";
-      zeroHint.textContent = "Знайдіть наступну сигнальну точку";
-    }
-  };
-
-  zeroStage.addEventListener("pointermove", moveReticle);
-
-  zeroStage.addEventListener("pointerdown", (event) => {
-    if (event.button && event.button !== 0) return;
-
-    zeroStage.focus({ preventScroll: true });
-    moveReticle(event);
-    const point = getAimPoint(event);
-    const hitTarget = zeroTargets.find((target) => {
-      if (target.classList.contains("is-locked")) return false;
-      const rect = target.getBoundingClientRect();
-      const distance = Math.hypot(
-        event.clientX - (rect.left + rect.width / 2),
-        event.clientY - (rect.top + rect.height / 2),
-      );
-      return distance <= rect.width * 0.72;
-    });
-
-    if (hitTarget) {
-      lockTarget(hitTarget, point);
-    } else {
-      zeroStatus.textContent = "Оптика шукає сигнал";
-      zeroHint.textContent = "Знайдіть сигнальну точку";
-      triggerPulse(point.x, point.y, false);
-    }
-  });
-
-  zeroTargets.forEach((target) => {
-    target.addEventListener("click", (event) => {
-      if (event.detail !== 0 || target.classList.contains("is-locked")) return;
-      const rect = target.getBoundingClientRect();
-      const point = {
-        x: (rect.left + rect.width / 2 - zeroStage.getBoundingClientRect().left) / zeroStage.getBoundingClientRect().width,
-        y: (rect.top + rect.height / 2 - zeroStage.getBoundingClientRect().top) / zeroStage.getBoundingClientRect().height,
-      };
-      zeroStage.style.setProperty("--aim-x", `${(point.x * 100).toFixed(2)}%`);
-      zeroStage.style.setProperty("--aim-y", `${(point.y * 100).toFixed(2)}%`);
-      lockTarget(target, point);
-    });
-  });
-}
