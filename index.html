@@ -49,80 +49,97 @@
               <span>Lyman Systems</span>
               <span class="hud__muted">Defence electro-optics</span>
             </div>
-            <div class="hud__item hud__item--state" id="system-state">
-              Оптика в режимі очікування
-            </div>
           </header>
 
           <div class="scroll-cue" id="scroll-cue" aria-hidden="true">
-            <span class="scroll-cue__label">Прокрутіть, щоб активувати</span>
             <span class="scroll-cue__line"><i></i></span>
           </div>
 
           <div class="progress" aria-hidden="true">
-            <span class="progress__index">00</span>
             <span class="progress__track"><i></i></span>
-            <span class="progress__index">01</span>
-          </div>
-
-          <div class="loader" id="loader" role="status" aria-live="polite">
-            <span class="loader__pulse"></span>
-            <span>Підготовка системи</span>
           </div>
         </div>
       </section>
 
-      <section class="zero" id="zero" aria-labelledby="zero-title">
-        <div class="zero__shell section-shell">
-          <header class="zero__header">
-            <div>
-              <p class="eyebrow">Системи спостереження</p>
-              <h1 id="zero-title">Контроль того,<br />що не видно.</h1>
-            </div>
-            <p class="zero__status" id="zero-status" aria-live="polite">
-              Режим сканування
+      <section class="spectrum" id="spectrum" aria-labelledby="spectrum-title">
+        <div class="spectrum__sticky">
+          <div class="spectrum__ambient" aria-hidden="true"></div>
+
+          <header class="spectrum__copy">
+            <p class="spectrum__eyebrow">Adaptive electro-optics</p>
+            <h2 id="spectrum-title">See the scene.<br />See the signal.</h2>
+            <p class="spectrum__lede">
+              One field carried from available light into darkness, then resolved
+              through a white-hot thermal channel.
             </p>
           </header>
 
-          <div
-            class="zero__stage"
-            id="zero-stage"
-            tabindex="0"
-            aria-label="Демонстраційне поле оптики. Наведіть курсор на сигнальні точки та натисніть."
-          >
-            <div class="zero__grid" aria-hidden="true"></div>
-            <div class="zero__haze" aria-hidden="true"></div>
-            <div class="zero__noise" aria-hidden="true"></div>
-            <div class="zero__flash" id="zero-flash" aria-hidden="true"></div>
+          <figure class="spectrum__viewer" aria-label="The same field shown in visible light, darkness and thermal imaging">
+            <div class="spectrum__stack">
+              <img
+                class="spectrum__image spectrum__image--day"
+                src="./assets/visible.png"
+                alt="Operators positioned across an open field"
+                loading="lazy"
+                decoding="async"
+              />
+              <img
+                class="spectrum__image spectrum__image--night"
+                src="./assets/notermal%20night.png"
+                alt=""
+                loading="lazy"
+                decoding="async"
+                aria-hidden="true"
+              />
+              <img
+                class="spectrum__image spectrum__image--thermal"
+                src="./assets/termal.png"
+                alt=""
+                loading="lazy"
+                decoding="async"
+                aria-hidden="true"
+              />
+              <div class="spectrum__thermal-grain" aria-hidden="true"></div>
+              <div class="spectrum__focus spectrum__focus--near" aria-hidden="true"></div>
+              <div class="spectrum__focus spectrum__focus--far" aria-hidden="true"></div>
+            </div>
 
-            <button class="zero__target" type="button" data-target style="--target-x: 21%; --target-y: 27%;" aria-label="Сигнальна точка один">
-              <span></span><i></i>
-            </button>
-            <button class="zero__target" type="button" data-target style="--target-x: 72%; --target-y: 39%;" aria-label="Сигнальна точка два">
-              <span></span><i></i>
-            </button>
-            <button class="zero__target" type="button" data-target style="--target-x: 43%; --target-y: 73%;" aria-label="Сигнальна точка три">
-              <span></span><i></i>
-            </button>
+            <figcaption class="spectrum__frame-label">
+              <span class="spectrum__live-dot" aria-hidden="true"></span>
+              <span id="spectrum-frame-label">Visible spectrum</span>
+            </figcaption>
+          </figure>
 
-            <div class="zero__reticle" id="zero-reticle" aria-hidden="true">
-              <span></span><i></i>
+          <aside class="spectrum__annotation spectrum__annotation--near">
+            <span class="spectrum__annotation-index">01</span>
+            <div>
+              <h3>Thermal separation</h3>
+              <p>Human heat signatures remain distinct from cold terrain.</p>
             </div>
-            <div class="zero__readout zero__readout--left" aria-hidden="true">
-              <span>Дистанція</span><b id="zero-range">087</b>
+          </aside>
+
+          <aside class="spectrum__annotation spectrum__annotation--far">
+            <span class="spectrum__annotation-index">02</span>
+            <div>
+              <h3>Range continuity</h3>
+              <p>Foreground and distant operators resolve in the same field.</p>
             </div>
-            <div class="zero__readout zero__readout--right" aria-hidden="true">
-              <span>Фіксація</span><b id="zero-lock">0 / 3</b>
-            </div>
-            <p class="zero__hint" id="zero-hint">Рухайтеся полем спостереження</p>
+          </aside>
+
+          <div class="spectrum__modes" aria-label="Imaging sequence">
+            <span class="spectrum__mode is-active" data-spectrum-mode>Visible</span>
+            <span class="spectrum__mode" data-spectrum-mode>No light</span>
+            <span class="spectrum__mode" data-spectrum-mode>White-hot</span>
           </div>
 
-          <footer class="zero__footer">
-            <p>Переміщайте курсор або торкніться поля, щоб побачити роботу системи.</p>
-            <p>Демонстраційний модуль Lyman Systems</p>
-          </footer>
+          <div class="spectrum__rail" aria-hidden="true">
+            <span>02</span>
+            <i><b></b></i>
+            <span>03</span>
+          </div>
         </div>
       </section>
+
     </main>
 
     <noscript>
