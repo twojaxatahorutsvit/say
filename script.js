@@ -28,24 +28,33 @@ const getHeroProgress = () => {
 
 const setHeroState = (progress) => {
   const maskFade = smoothstep(0.08, 0.5, progress);
-  const sceneTransition = smoothstep(0.54, 0.72, progress);
-  const identityIn = smoothstep(0.78, 0.94, progress);
-  const flashIn = smoothstep(0.55, 0.6, progress);
-  const flashOut = 1 - smoothstep(0.64, 0.7, progress);
+  const activation = smoothstep(0.72, 0.98, progress);
+  const sceneTransition = smoothstep(0.79, 0.94, progress);
+  const sceneSettled = smoothstep(0.93, 1, progress);
+  const identityIn = smoothstep(0.955, 0.995, progress);
+  const flashIn = smoothstep(0.78, 0.855, progress);
+  const flashOut = 1 - smoothstep(0.87, 0.955, progress);
   const signalFlash = flashIn * flashOut;
+  const transitionNoise = signalFlash * 0.3;
 
   root.style.setProperty("--progress", progress.toFixed(4));
   root.style.setProperty("--mask-opacity", (1 - maskFade).toFixed(4));
-  root.style.setProperty("--vignette-opacity", (1 - sceneTransition * 0.44).toFixed(4));
+  root.style.setProperty("--vignette-opacity", (1 - activation * 0.44).toFixed(4));
   root.style.setProperty(
     "--noise-opacity",
-    (0.075 + sceneTransition * 0.1 + signalFlash * 0.18).toFixed(4),
+    (0.075 + activation * 0.1 + transitionNoise - sceneSettled * 0.075).toFixed(4),
   );
-  root.style.setProperty("--scanline-opacity", (sceneTransition * 0.038).toFixed(4));
-  root.style.setProperty("--phosphor-opacity", (sceneTransition * 0.48).toFixed(4));
+  root.style.setProperty(
+    "--scanline-opacity",
+    (activation * 0.038 + signalFlash * 0.055).toFixed(4),
+  );
+  root.style.setProperty(
+    "--phosphor-opacity",
+    Math.min(activation * 0.52 + signalFlash * 0.7, 1).toFixed(4),
+  );
   root.style.setProperty("--signal-flash-opacity", (signalFlash * 0.9).toFixed(4));
   root.style.setProperty("--video-scale", (1.005 + progress * 0.012).toFixed(4));
-  root.style.setProperty("--video-opacity", (1 - sceneTransition).toFixed(4));
+  root.style.setProperty("--video-opacity", (1 - sceneTransition * 0.72).toFixed(4));
   root.style.setProperty("--scene-opacity", sceneTransition.toFixed(4));
   root.style.setProperty("--scene-scale", (1.075 - sceneTransition * 0.075).toFixed(4));
   root.style.setProperty("--scene-blur", `${(14 - sceneTransition * 14).toFixed(2)}px`);
@@ -65,52 +74,22 @@ const getSpectrumProgress = () => {
 
 const setSpectrumState = (progress) => {
   if (!spectrum) return;
-
-  const nightIn = smoothstep(0.14, 0.34, progress);
-  const thermalIn = smoothstep(0.43, 0.66, progress);
-  const copyOut = smoothstep(0.52, 0.71, progress);
-  const nearInfo = smoothstep(0.69, 0.84, progress);
-  const farInfo = smoothstep(0.78, 0.93, progress);
-
-  root.style.setProperty("--spectrum-progress", progress.toFixed(4));
-  root.style.setProperty("--spectrum-day-opacity", (1 - nightIn).toFixed(4));
-  root.style.setProperty(
-    "--spectrum-night-opacity",
-    (nightIn * (1 - thermalIn)).toFixed(4),
-  );
-  root.style.setProperty("--spectrum-thermal-opacity", thermalIn.toFixed(4));
-  root.style.setProperty("--spectrum-copy-opacity", (1 - copyOut).toFixed(4));
-  root.style.setProperty("--spectrum-copy-y", `${(copyOut * -18).toFixed(2)}px`);
-  root.style.setProperty(
-    "--spectrum-frame-scale",
-    (0.965 + smoothstep(0.02, 0.68, progress) * 0.035).toFixed(4),
-  );
-  root.style.setProperty(
-    "--spectrum-ambient-opacity",
-    (0.15 + thermalIn * 0.19).toFixed(4),
-  );
-  root.style.setProperty("--spectrum-grain-opacity", (thermalIn * 0.075).toFixed(4));
-  root.style.setProperty("--spectrum-info-near", nearInfo.toFixed(4));
-  root.style.setProperty(
-    "--spectrum-info-near-y",
-    `${((1 - nearInfo) * 22).toFixed(2)}px`,
-  );
-  root.style.setProperty("--spectrum-info-far", farInfo.toFixed(4));
-  root.style.setProperty(
-    "--spectrum-info-far-y",
-    `${((1 - farInfo) * 22).toFixed(2)}px`,
-  );
-
-  const activeMode = progress < 0.27 ? 0 : progress < 0.55 ? 1 : 2;
-  const labels = ["Visible spectrum", "Ambient light lost", "White-hot thermal"];
-
-  spectrumModes.forEach((mode, index) => {
-    mode.classList.toggle("is-active", index === activeMode);
-  });
-
-  if (spectrumFrameLabel) {
-    spectrumFrameLabel.textContent = labels[activeMode];
-  }
+  const night = smoothstep(0.22, 0.36, progress);
+  const thermal = smoothstep(0.58, 0.72, progress);
+  spectrum.style.setProperty("--night-in", night.toFixed(4));
+  spectrum.style.setProperty("--thermal-in", thermal.toFixed(4));
+  spectrum.style.setProperty("--vision-progress", progress.toFixed(4));
+  const mode = thermal >= 0.5 ? 2 : night >= 0.5 ? 1 : 0;
+  const labels = ["01 / Visible", "02 / Low light", "03 / Thermal"];
+  const descriptions = [
+    "What the eye sees.\nThe environment\nin its natural form.",
+    "When light fades,\ndetails disappear.\nBut the scene\nis still there.",
+    "Heat reveals\nwhat is hidden.\nA different layer\nof the same reality."
+  ];
+  document.querySelector("#vision-label").textContent = labels[mode];
+  document.querySelector("#vision-description").textContent = descriptions[mode];
+  document.querySelector("#vision-detail-label").textContent = ["Environment", "Light conditions", "Imaging mode"][mode];
+  document.querySelector("#vision-detail").textContent = ["Available light", "After dark", "White-hot"][mode];
 };
 
 const syncVisuals = () => {
@@ -122,7 +101,7 @@ const syncVisuals = () => {
   if (!videoReady || !duration || !video) return;
 
   const endPadding = Math.min(0.035, duration * 0.008);
-  const videoProgress = clamp(heroProgress / 0.62);
+  const videoProgress = clamp(heroProgress / 0.8);
   const targetTime = videoProgress * Math.max(duration - endPadding, 0);
 
   if (Math.abs(video.currentTime - targetTime) > 0.016) {
