@@ -38,6 +38,7 @@ const setHeroState = (progress) => {
   const transitionNoise = signalFlash * 0.3;
 
   root.style.setProperty("--progress", progress.toFixed(4));
+  root.style.setProperty("--intro-opacity", (1 - smoothstep(0.08, 0.32, progress)).toFixed(4));
   root.style.setProperty("--mask-opacity", (1 - maskFade).toFixed(4));
   root.style.setProperty("--vignette-opacity", (1 - activation * 0.44).toFixed(4));
   root.style.setProperty(
