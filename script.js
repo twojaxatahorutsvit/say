@@ -7,86 +7,52 @@ const smoothstep = (edge0, edge1, value) => {
 };
 
 const root = document.documentElement;
+const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
 const hero = document.querySelector("#hero");
 const video = document.querySelector("#nvg-video");
-const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
 const spectrum = document.querySelector("#spectrum");
 const spectrumModes = [...document.querySelectorAll("[data-spectrum-mode]")];
 const spectrumFrameLabel = document.querySelector("#spectrum-frame-label");
 
-let duration = 0;
-let targetTime = 0;
-let currentProgress = 0;
 let ticking = false;
+let duration = 0;
 let videoReady = false;
 
-const setVisualState = (progress) => {
-  const maskFade = smoothstep(0.08, 0.5, progress);
-  const hudFade = smoothstep(0.32, 0.72, progress);
-  const activation = smoothstep(0.72, 0.98, progress);
-  const sceneTransition = smoothstep(0.79, 0.94, progress);
-  const sceneSettled = smoothstep(0.93, 1, progress);
-  const flashIn = smoothstep(0.78, 0.855, progress);
-  const flashOut = 1 - smoothstep(0.87, 0.955, progress);
-  const signalFlash = flashIn * flashOut;
-  const transitionNoise = signalFlash * 0.3;
-
-  root.style.setProperty("--progress", progress.toFixed(4));
-  root.style.setProperty("--mask-opacity", (1 - maskFade).toFixed(4));
-  root.style.setProperty(
-    "--vignette-opacity",
-    (1 - activation * 0.44).toFixed(4),
-  );
-  root.style.setProperty("--hud-opacity", (1 - hudFade).toFixed(4));
-  root.style.setProperty(
-    "--noise-opacity",
-    (0.075 + activation * 0.1 + transitionNoise - sceneSettled * 0.075).toFixed(4),
-  );
-  root.style.setProperty(
-    "--scanline-opacity",
-    (activation * 0.038 + signalFlash * 0.055).toFixed(4),
-  );
-  root.style.setProperty(
-    "--phosphor-opacity",
-    Math.min(activation * 0.52 + signalFlash * 0.7, 1).toFixed(4),
-  );
-  root.style.setProperty(
-    "--signal-flash-opacity",
-    (signalFlash * 0.9).toFixed(4),
-  );
-  root.style.setProperty(
-    "--video-scale",
-    (1.005 + progress * 0.012).toFixed(4),
-  );
-  root.style.setProperty(
-    "--video-opacity",
-    (1 - sceneTransition * 0.72).toFixed(4),
-  );
-  root.style.setProperty(
-    "--scene-opacity",
-    sceneTransition.toFixed(4),
-  );
-  root.style.setProperty(
-    "--scene-scale",
-    (1.075 - sceneTransition * 0.075).toFixed(4),
-  );
-  root.style.setProperty(
-    "--scene-blur",
-    `${(14 - sceneTransition * 14).toFixed(2)}px`,
-  );
-  root.style.setProperty(
-    "--scene-reveal",
-    `${(8 + sceneTransition * 142).toFixed(2)}%`,
-  );
-
-};
-
-const getProgress = () => {
-  if (reduceMotion.matches) return 1;
+const getHeroProgress = () => {
+  if (!hero || reduceMotion.matches) return 1;
 
   const scrollDistance = Math.max(hero.offsetHeight - window.innerHeight, 1);
   const heroTop = hero.getBoundingClientRect().top + window.scrollY;
   return clamp((window.scrollY - heroTop) / scrollDistance);
+};
+
+const setHeroState = (progress) => {
+  const maskFade = smoothstep(0.08, 0.5, progress);
+  const sceneTransition = smoothstep(0.54, 0.72, progress);
+  const identityIn = smoothstep(0.78, 0.94, progress);
+  const flashIn = smoothstep(0.55, 0.6, progress);
+  const flashOut = 1 - smoothstep(0.64, 0.7, progress);
+  const signalFlash = flashIn * flashOut;
+
+  root.style.setProperty("--progress", progress.toFixed(4));
+  root.style.setProperty("--mask-opacity", (1 - maskFade).toFixed(4));
+  root.style.setProperty("--vignette-opacity", (1 - sceneTransition * 0.44).toFixed(4));
+  root.style.setProperty(
+    "--noise-opacity",
+    (0.075 + sceneTransition * 0.1 + signalFlash * 0.18).toFixed(4),
+  );
+  root.style.setProperty("--scanline-opacity", (sceneTransition * 0.038).toFixed(4));
+  root.style.setProperty("--phosphor-opacity", (sceneTransition * 0.48).toFixed(4));
+  root.style.setProperty("--signal-flash-opacity", (signalFlash * 0.9).toFixed(4));
+  root.style.setProperty("--video-scale", (1.005 + progress * 0.012).toFixed(4));
+  root.style.setProperty("--video-opacity", (1 - sceneTransition).toFixed(4));
+  root.style.setProperty("--scene-opacity", sceneTransition.toFixed(4));
+  root.style.setProperty("--scene-scale", (1.075 - sceneTransition * 0.075).toFixed(4));
+  root.style.setProperty("--scene-blur", `${(14 - sceneTransition * 14).toFixed(2)}px`);
+  root.style.setProperty("--scene-reveal", `${(8 + sceneTransition * 142).toFixed(2)}%`);
+  root.style.setProperty("--hero-identity-opacity", identityIn.toFixed(4));
+  root.style.setProperty("--hero-identity-y", `${((1 - identityIn) * 18).toFixed(2)}px`);
+  root.style.setProperty("--hero-identity-events", identityIn > 0.98 ? "auto" : "none");
 };
 
 const getSpectrumProgress = () => {
@@ -107,10 +73,7 @@ const setSpectrumState = (progress) => {
   const farInfo = smoothstep(0.78, 0.93, progress);
 
   root.style.setProperty("--spectrum-progress", progress.toFixed(4));
-  root.style.setProperty(
-    "--spectrum-day-opacity",
-    (1 - nightIn).toFixed(4),
-  );
+  root.style.setProperty("--spectrum-day-opacity", (1 - nightIn).toFixed(4));
   root.style.setProperty(
     "--spectrum-night-opacity",
     (nightIn * (1 - thermalIn)).toFixed(4),
@@ -126,10 +89,7 @@ const setSpectrumState = (progress) => {
     "--spectrum-ambient-opacity",
     (0.15 + thermalIn * 0.19).toFixed(4),
   );
-  root.style.setProperty(
-    "--spectrum-grain-opacity",
-    (thermalIn * 0.075).toFixed(4),
-  );
+  root.style.setProperty("--spectrum-grain-opacity", (thermalIn * 0.075).toFixed(4));
   root.style.setProperty("--spectrum-info-near", nearInfo.toFixed(4));
   root.style.setProperty(
     "--spectrum-info-near-y",
@@ -153,17 +113,17 @@ const setSpectrumState = (progress) => {
   }
 };
 
-const syncVideo = () => {
+const syncVisuals = () => {
   ticking = false;
-  currentProgress = getProgress();
-  setVisualState(currentProgress);
+  const heroProgress = getHeroProgress();
+  setHeroState(heroProgress);
   setSpectrumState(getSpectrumProgress());
 
-  if (!videoReady || !duration) return;
+  if (!videoReady || !duration || !video) return;
 
   const endPadding = Math.min(0.035, duration * 0.008);
-  const videoProgress = clamp(currentProgress / 0.8);
-  targetTime = videoProgress * Math.max(duration - endPadding, 0);
+  const videoProgress = clamp(heroProgress / 0.62);
+  const targetTime = videoProgress * Math.max(duration - endPadding, 0);
 
   if (Math.abs(video.currentTime - targetTime) > 0.016) {
     video.currentTime = targetTime;
@@ -173,26 +133,29 @@ const syncVideo = () => {
 const requestSync = () => {
   if (ticking) return;
   ticking = true;
-  window.requestAnimationFrame(syncVideo);
+  window.requestAnimationFrame(syncVisuals);
 };
 
 const prepareVideo = () => {
+  if (!video) return;
   duration = Number.isFinite(video.duration) ? video.duration : 0;
   video.pause();
   videoReady = duration > 0;
   requestSync();
 };
 
-video.addEventListener("loadedmetadata", prepareVideo, { once: true });
+if (video) {
+  video.addEventListener("loadedmetadata", prepareVideo, { once: true });
 
-if (video.readyState >= 1) {
-  prepareVideo();
+  if (video.readyState >= 1) {
+    prepareVideo();
+  }
 }
 
 window.addEventListener("scroll", requestSync, { passive: true });
 window.addEventListener("resize", requestSync, { passive: true });
 reduceMotion.addEventListener("change", requestSync);
 
-setVisualState(0);
+setHeroState(0);
 setSpectrumState(0);
 requestSync();
